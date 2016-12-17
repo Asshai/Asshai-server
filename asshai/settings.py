@@ -25,7 +25,7 @@ SECRET_KEY = '21r7eyy2q5(jy)&qtn3-gx$rr&%liqy_v!dz%fjbxoo$z&1ga+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['20.60.174.1','localhost']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_swagger',
+    'topic',
 ]
 
 MIDDLEWARE = [
