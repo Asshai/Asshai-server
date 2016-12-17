@@ -79,11 +79,11 @@ WSGI_APPLICATION = 'asshai.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  
-        'NAME': 'asshai',                      
-        'USER': 'root',
-        'PASSWORD': 'linwei',
-        'PORT': '3306',         
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'test_linwei_asshai',
+        'USER': '',
+        'PASSWORD': '',
+        'PORT': '3306',
     }
 }
 

@@ -22,6 +22,9 @@ if __name__ == "__main__":
             )
         raise
 
+    if len(sys.argv) == 1:
+        execute_from_command_line(sys.argv)
+        pass
     if sys.argv[1] == 'clearmigrations':
         for app in INSTALLED_APPS:
             app_path = os.path.join(BASE_DIR, *app.split('.'))

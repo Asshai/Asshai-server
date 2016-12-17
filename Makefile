@@ -9,7 +9,7 @@ serve:
 
 deploy:
 	. venv/bin/activate;\
-	python ./manage.py runserver 0.0.0.0:80
+	python ./manage.py runserver --settings=asshai.settings_deploy 0.0.0.0:9000
 
 clean:
 	find -type f -name '*.pyc' -delete
