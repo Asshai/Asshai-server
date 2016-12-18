@@ -25,7 +25,7 @@ SECRET_KEY = '21r7eyy2q5(jy)&qtn3-gx$rr&%liqy_v!dz%fjbxoo$z&1ga+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['doubandev2.intra.douban.com', 'localhost']
 
 
 # Application definition
@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'asshai.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'asshai',
-        'USER': 'root',
-        'PASSWORD': 'linwei',
+        'NAME': 'test_linwei_asshai',
+        'USER': '',
+        'PASSWORD': '',
         'PORT': '3306',
     }
 }

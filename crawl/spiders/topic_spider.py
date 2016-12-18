@@ -19,7 +19,7 @@ class TopicSpider(scrapy.Spider):
     def start_requests(self):
         all_groups = Group.objects.all()
         for group in all_groups:
-            yield self.get_group_topic_list(group.douban_id)
+            yield self.get_group_topic_list(group.douban_id, 0, 60)
 
     def get_group_topic_list(self, group_id, start=0, count=30):
         query = {'start': start, 'count': count}

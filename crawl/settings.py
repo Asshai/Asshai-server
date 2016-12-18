@@ -27,7 +27,7 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 3
+#DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -64,9 +64,9 @@ DOWNLOAD_DELAY = 3
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'crawl.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'crawl.pipelines.TopicPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -91,7 +91,7 @@ DOWNLOAD_DELAY = 3
 
 
 import sys
-sys.path.append('/Users/linwei/workspace/Asshai-server')
+sys.path.append('/data/home/linwei/Asshai-server')
 
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'asshai.settings'
