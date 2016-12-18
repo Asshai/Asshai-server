@@ -5,6 +5,7 @@ coreapi==2.1.1
 cryptography==1.7.1
 cssselect==1.0.0
 Django==1.10.4
+django-crontab==0.7.1
 django-filter==1.0.1
 django-rest-swagger==2.1.0
 djangorestframework==3.5.3
@@ -27,6 +28,7 @@ PyYAML==3.12
 queuelib==1.4.2
 requests==2.12.3
 Scrapy==1.2.2
+scrapy-djangoitem==1.1.1
 service-identity==16.0.0
 simplejson==3.10.0
 six==1.10.0

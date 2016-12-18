@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_swagger',
     'topic',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -79,11 +80,11 @@ WSGI_APPLICATION = 'asshai.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  
-        'NAME': 'asshai',                      
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'asshai',
         'USER': 'root',
         'PASSWORD': 'linwei',
-        'PORT': '3306',         
+        'PORT': '3306',
     }
 }
 
@@ -125,4 +126,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# django restful
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 30
+}
+
+CRONJOBS = [
+    ('*/5 * * * *', 'cron.scheduled_crawl_group_topics')
+]
 

@@ -13,6 +13,24 @@ from rest_framework_swagger import renderers
 from . import models
 from . import serializers
 
+class ActionSerializerMixin(object):
+    """
+    Viewset 中根据不同的 action 提供不同的 Serializer
+
+    用法：
+    serializer_classes = {'action': 'serializer', ...}
+    """
+    def get_serializer_class(self):
+        try:
+            return self.serializer_classes[self.action]
+        except AttributeError:
+            raise AttributeError
+        except KeyError:
+            try:
+                return self.serializer_classes['__default__']
+            except KeyError:
+                return super(ActionSerializerMixin, self).get_serializer_class()
+
 
 class LocationViewSet(ReadOnlyModelViewSet):
     """
@@ -37,27 +55,17 @@ class LocationViewSet(ReadOnlyModelViewSet):
         return self.list(request)
 
 
-class TopicViewSet(ReadOnlyModelViewSet):
+class TopicViewSet(ActionSerializerMixin, ModelViewSet):
     """
     [帖子详情]
     """
-    serializer_class = serializers.TopicSerializer
+    serializer_classes = {
+        '__default__': serializers.TopicSerializer,
+        'list': serializers.ListTopicSerializer,
+        'hot': serializers.ListTopicSerializer,
+    }
     queryset = models.Topic.objects.all()
 
-    def initial(self, request, *args, **kwargs):
-        """
-        获取帖子详情
-        ---
-        paths: /topic/{douban_id}
-        parameters:
-            - douban_id:
-              required: true
-              type: string
-              paramType: form
-        """
-        self.meeting = get_object_or_404(Meeting,
-                                         pk=self.kwargs.get('douban_id'))
-        return super(NoteViewSet, self).initial(request, *args, **kwargs)
     
     @list_route(methods=['GET'])
     def hot(self, request):

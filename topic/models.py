@@ -41,6 +41,7 @@ class Topic(models.Model):
     author_avatar = models.CharField(max_length=200)
     author_url = models.CharField(max_length=100)
 
+    photos = models.TextField()
     location = models.ForeignKey('Location', null=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):

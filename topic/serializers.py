@@ -10,9 +10,17 @@ class LocationSerializer(serializers.ModelSerializer):
         read_only_fields = ('name', 'longitude', 'latitude')
 
 
+class ListTopicSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Topic
+        fields = ('douban_id', 'group_id', 'title', 'url', 'create_time', 
+            'update_time', 'author_name', 'author_url', 'author_avatar', 'location')
+
+
 class TopicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Topic
         fields = ('douban_id', 'group_id', 'title', 'url', 'content', 'create_time', 
-            'update_time', 'author_name', 'author_url', 'author_avatar', 'location')
+            'update_time', 'author_name', 'author_url', 'author_avatar', 'location', 'photos')
