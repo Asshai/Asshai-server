@@ -66,7 +66,6 @@ class TopicViewSet(ActionSerializerMixin, ModelViewSet):
     }
     queryset = models.Topic.objects.all()
 
-    
     @list_route(methods=['GET'])
     def hot(self, request):
         """
