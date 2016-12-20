@@ -134,6 +134,6 @@ REST_FRAMEWORK = {
 }
 
 CRONJOBS = [
-    ('*/5 * * * *', 'cron.scheduled_crawl_group_topics')
+    ('5 * * * *', 'cron.scheduled_crawl_group_topics')
 ]
 

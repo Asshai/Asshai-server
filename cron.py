@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from scrapy.crawler import CrawlerProcess
 from crawl.spiders.topic_spider import TopicSpider
 from topic import models
