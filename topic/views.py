@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import get_object_or_404
+from django.db.models.expressions import RawSQL
+
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import list_route, detail_route, api_view
 from rest_framework.response import Response
 from rest_framework_swagger import renderers
+from rest_framework.exceptions import ParseError
+from django.db.models import Q
+from django.views.decorators.cache import cache_page
 
 from . import models
 from . import serializers
@@ -79,7 +82,38 @@ class TopicViewSet(ActionSerializerMixin, ModelViewSet):
               paramType: form
 
         """
-        self.queryset = self.get_queryset()
-        return self.list(request)
+        location_id = request.GET.get('location_id')
+        if not location_id:
+            raise ParseError('request must hava location_id')
+        location = get_object_or_404(models.Location, id=location_id)
+        # self.queryset = models.Topic.objects.filter(Q(title__contains=location.name) | Q(content__contains=location.name)).order_by('title', 'create_time').reverse().distinct('title')
+        # return self.list(request)
+
+        like = '%' + location.name + '%'
+        queryset = models.Topic.objects.raw('select * from topic_topic where douban_id in '
+                                            '(select min(douban_id) from topic_topic '
+                                            'where title like %s or content like %s group by title)'
+                                            'order by create_time desc', [like, like])
+        page = self.paginate_queryset(list(queryset))
+        if page is not None:
+            s = self.get_serializer(page, many=True)
+            return self.get_paginated_response(s.data)
+        s = self.get_serializer(queryset, many=True)
+        return Response(s.data)
 
 
+from django.http import HttpResponse
+import urllib2
+def picture_proxy(request):
+    src = request.GET.get('src')
+    if not src:
+        raise ParseError('request must hava src')
+
+    res = urllib2.urlopen(src)
+    r = HttpResponse(res.read())
+    print res.code
+    # set the headers
+    for header in res.info().keys():
+        if header == 'content-type':
+            r[header] = res.info()[header]
+    return r

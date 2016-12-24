@@ -8,7 +8,7 @@ from topic.models import Group, Topic
 
 
 FRODO_HEADERS = {'User-Agent': 'Rexxar-Core/0.1.3 com.douban.frodo/4.9.0'}
-PAGES = 5
+PAGES = 10
 PAGE_COUNT = 100
 
 

@@ -130,10 +130,16 @@ STATIC_URL = '/static/'
 # django restful
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 30
+    'PAGE_SIZE': 20
 }
 
 CRONJOBS = [
     ('5 * * * *', 'cron.scheduled_crawl_group_topics')
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'tbl_asshai_cache',
+    }
+}

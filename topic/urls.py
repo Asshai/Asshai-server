@@ -11,4 +11,5 @@ router.register(r'topic', views.TopicViewSet, base_name='topic')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'picture/', views.picture_proxy),
 ]
