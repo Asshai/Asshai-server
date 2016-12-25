@@ -6,6 +6,7 @@ from django.db import connection
 from django.db.models import Q
 from django.core.cache import cache
 import json
+import urllib2
 
 
 class Location(models.Model):
@@ -70,12 +71,19 @@ class Topic(models.Model):
 
     @property
     def cover(self):
-        if self.photo_list and len(self.photo_list) > 0:
-            return self.photo_list[0]
-        return self.DEFAULT_COVER
+        if not self.photos:
+            return self.DEFAULT_COVER
+        ps = json.loads(self.photos)
+        if isinstance(ps, list) and len(ps) > 0:
+            return ps[0]
+        else:
+            return self.DEFAULT_COVER
 
     @property
     def photo_list(self):
-        if self.photos:
-            return json.loads(self.photos)
-        return None
+        opener = urllib2.build_opener()
+        opener.addheaders = [('User-Agent', 'Rexxar-Core/0.1.3 com.douban.frodo/4.9.0')]
+        res = opener.open("https://frodo.douban.com/api/v2/group/topic/%s?" % self.douban_id)
+        raw = res.read()
+        model = json.loads(raw)
+        return model['photos']
