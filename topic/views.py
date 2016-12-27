@@ -68,7 +68,7 @@ class LocationViewSet(ReadOnlyModelViewSet):
             if dis < NEARBY_RADIUS and x.topics > 0:
                 x.distance = dis
                 ss.append(x)
-        self.queryset = ss
+        self.queryset = sorted(ss, key=lambda x : x.distance)
         return self.list(request)
 
     @list_route(methods=['GET'])

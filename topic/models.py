@@ -12,7 +12,7 @@ import base64
 import cStringIO
 from math import radians, cos, sin, asin, sqrt
 
-from util.const import DEFAULT_COVER, CACHE_TIME
+from util.const import CACHE_TIME, DEFAULT_COVER
 
 class Location(models.Model):
 
@@ -140,12 +140,12 @@ class Topic(models.Model):
     @property
     def cover(self):
         if not self.photos:
-            return DEFAULT_COVER
+            return None
         ps = json.loads(self.photos)
         if isinstance(ps, list) and len(ps) > 0:
             return ps[0]
         else:
-            return DEFAULT_COVER
+            return None
 
     @property
     def photo_list(self):
