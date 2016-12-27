@@ -12,9 +12,12 @@ from rest_framework_swagger import renderers
 from rest_framework.exceptions import ParseError
 from django.db.models import Q
 from django.views.decorators.cache import cache_page
+from itertools import chain
 
 from . import models
 from . import serializers
+
+NEARBY_RADIUS = 2 * 1000
 
 class ActionSerializerMixin(object):
     """
@@ -42,6 +45,7 @@ class LocationViewSet(ReadOnlyModelViewSet):
     serializer_class = serializers.LocationSerializer
     queryset = models.Location.objects.all()
 
+
     @list_route(methods=['GET'])
     def nearby(self, request):
         """
@@ -54,7 +58,18 @@ class LocationViewSet(ReadOnlyModelViewSet):
               type: double string
               paramType: query
         """
-        self.queryset = self.get_queryset()
+        lon = request.GET.get('longitude')
+        lan = request.GET.get('lantitude')
+        if not lon or not lan:
+            raise ParseError('request must hava longitude and lantitude')
+        q = models.Location.objects.all()
+        ss = []
+        for x in q:
+            dis = x.calc_distance(lon, lan)
+            if dis < NEARBY_RADIUS and x.topics > 0:
+                x.distance = dis
+                ss.append(x)
+        self.queryset = ss
         return self.list(request)
 
 
@@ -66,6 +81,8 @@ class TopicViewSet(ActionSerializerMixin, ModelViewSet):
         '__default__': serializers.TopicSerializer,
         'list': serializers.ListTopicSerializer,
         'hot': serializers.ListTopicSerializer,
+        'search': serializers.ListTopicSerializer,
+        'nearby': serializers.ListTopicSerializer,
     }
     queryset = models.Topic.objects.all()
 
@@ -99,6 +116,71 @@ class TopicViewSet(ActionSerializerMixin, ModelViewSet):
             s = self.get_serializer(page, many=True)
             return self.get_paginated_response(s.data)
         s = self.get_serializer(queryset, many=True)
+        return Response(s.data)
+
+    @list_route(methods=['GET'])
+    def search(self, request):
+        """
+        根据地点搜索帖子
+        ---
+        paths: /topic/search
+        parameters:
+            - q: 关键字
+              required: true
+              type: string
+              paramType: form
+
+        """
+        query = request.GET.get('q')
+        if not query:
+            raise ParseError('request must hava query')
+
+        like = '%' + query + '%'
+        queryset = models.Topic.objects.raw('select * from topic_topic where douban_id in '
+                                            '(select min(douban_id) from topic_topic '
+                                            'where title like %s or content like %s group by title)'
+                                            'order by create_time desc', [like, like])
+        page = self.paginate_queryset(list(queryset))
+        if page is not None:
+            s = self.get_serializer(page, many=True)
+            return self.get_paginated_response(s.data)
+        s = self.get_serializer(queryset, many=True)
+        return Response(s.data)
+
+    @list_route(methods=['GET'])
+    def nearby(self, request):
+        """
+        根据当前位置获得附近的帖子
+        ---
+        parameters:
+            - longitude: 经度
+              lantitude: 纬度
+              required: false
+              type: double string
+              paramType: query
+        """
+        lon = request.GET.get('longitude')
+        lan = request.GET.get('lantitude')
+        if not lon or not lan:
+            raise ParseError('request must hava longitude and lantitude')
+        q = models.Location.objects.all()
+        locations = [x for x in q if x.calc_distance(lon, lan) < NEARBY_RADIUS and x.topics > 0]
+        sets = []
+        for l in locations:
+            like = '%' + l.name + '%'
+            s = models.Topic.objects.raw('select * from topic_topic where douban_id in '
+                                         '(select min(douban_id) from topic_topic '
+                                         'where title like %s or content like %s group by title) ', [like, like])
+            sets.append(s)
+        result_list = list(chain(*sets))
+        import time
+        result_list.sort(key=lambda x : int(time.mktime(x.create_time.timetuple())*1000), reverse=True)
+
+        page = self.paginate_queryset(result_list)
+        if page is not None:
+            s = self.get_serializer(page, many=True)
+            return self.get_paginated_response(s.data)
+        s = self.get_serializer(result_list, many=True)
         return Response(s.data)
 
 

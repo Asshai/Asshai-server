@@ -134,7 +134,7 @@ REST_FRAMEWORK = {
 }
 
 CRONJOBS = [
-    ('5 * * * *', 'cron.scheduled_crawl_group_topics')
+    ('0 7-23 * * *', 'cron.scheduled_crawl_group_topics')
 ]
 
 CACHES = {

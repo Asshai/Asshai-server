@@ -10,7 +10,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(models.Location)
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'latitude', 'longitude')
+    list_display = ('id', 'name', 'address', 'latitude', 'longitude')
 
 
 @admin.register(models.Topic)

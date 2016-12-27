@@ -41,7 +41,7 @@ class TopicSpider(scrapy.Spider):
         if data['topics'] and isinstance(data['topics'], list):
             for topic in data['topics']:
                 if Topic.objects.filter(douban_id=topic['id']).exists():
-                    print '[Skip]', topic['title']
+                    # print '[Skip]', topic['title']
                     self.skip_count = self.skip_count + 1
                 else:
                     yield self.get_topic_detail(response.meta['group_id'], topic['id'])
