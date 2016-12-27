@@ -5,6 +5,7 @@ from topic import models
 import json
 from django.db.models import Q
 import urllib2
+from urllib import urlencode, quote
 
 
 def scheduled_crawl_group_topics():
@@ -47,5 +48,16 @@ def address():
         if raw['result']:
             l.address = raw['result']['formatted_address']
             print "%s : %s" % (l.name, l.address)
+            l.save()
+
+def baidu_loc():
+    url = 'http://api.map.baidu.com/geocoder/v2/?address=%s&output=json&ak=72484b4d43aefbe834dca2bf24dec3db'
+    for l in models.Location.objects.all():
+        res = urllib2.urlopen(url % quote(l.name.encode('utf-8')))
+        raw = json.loads(res.read())
+        print raw
+        if raw['status'] == 0:
+            l.longitude = raw['result']['location']['lng']
+            l.latitude = raw['result']['location']['lat']
             l.save()
 

@@ -8,8 +8,8 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Location
         # fields = ('id', 'name', 'longitude', 'latitude', 'topics', 'marker_icon')
-        fields = ('id', 'name', 'longitude', 'latitude', 'topics', 'cover', 'address', 'distance')
-        read_only_fields = ('name', 'longitude', 'latitude', 'cover', 'address')
+        fields = ('id', 'name', 'latitude', 'longitude', 'topics', 'cover', 'address', 'distance')
+        read_only_fields = ('name', 'latitude', 'longitude', 'cover', 'address')
 
 
 class ListTopicSerializer(serializers.ModelSerializer):

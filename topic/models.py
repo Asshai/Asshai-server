@@ -31,6 +31,17 @@ class Location(models.Model):
         return self.name
 
     @property
+    def long(self):
+        # return str(float(self.longitude) - 0.0001)
+        return self.longitude
+
+    @property
+    def lati(self):
+        # return str(float(self.latitude) - 0.0001)
+        return self.latitude
+
+
+    @property
     def topics(self):
         citem = cache.get(self.KEY_TOPICS_COUNT % self.id)
         if citem:

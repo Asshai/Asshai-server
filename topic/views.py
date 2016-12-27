@@ -45,7 +45,6 @@ class LocationViewSet(ReadOnlyModelViewSet):
     serializer_class = serializers.LocationSerializer
     queryset = models.Location.objects.all()
 
-
     @list_route(methods=['GET'])
     def nearby(self, request):
         """
@@ -68,6 +67,36 @@ class LocationViewSet(ReadOnlyModelViewSet):
             dis = x.calc_distance(lon, lan)
             if dis < NEARBY_RADIUS and x.topics > 0:
                 x.distance = dis
+                ss.append(x)
+        self.queryset = ss
+        return self.list(request)
+
+    @list_route(methods=['GET'])
+    def search(self, request):
+        """
+        搜索地点
+        ---
+        paths: /location/search
+        parameters:
+            - q: 关键字
+              required: true
+              type: string
+              paramType: form
+            - longitude: 经度
+              lantitude: 纬度
+
+        """
+        query = request.GET.get('q')
+        lon = request.GET.get('longitude')
+        lan = request.GET.get('lantitude')
+        if not query:
+            raise ParseError('request must hava query')
+        q = models.Location.objects.filter(name__contains=query)
+        ss = []
+        for x in q:
+            if x.topics > 0:
+                if lon and lan:
+                    x.distance = x.calc_distance(lon, lan)
                 ss.append(x)
         self.queryset = ss
         return self.list(request)
