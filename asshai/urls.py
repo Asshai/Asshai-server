@@ -15,14 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from rest_framework_swagger.views import get_swagger_view
+# from rest_framework_swagger.views import get_swagger_view
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-swagger_view = get_swagger_view()
+# swagger_view = get_swagger_view()
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^docs/', swagger_view),
+    # url(r'^docs/', swagger_view),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^', include('topic.urls', namespace='topics')),
 ]
+
+urlpatterns += staticfiles_urlpatterns()
