@@ -8,7 +8,7 @@ from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import list_route, detail_route, api_view
 from rest_framework.response import Response
-from rest_framework_swagger import renderers
+# from rest_framework_swagger import renderers
 from rest_framework.exceptions import ParseError
 from django.db.models import Q
 from django.views.decorators.cache import cache_page

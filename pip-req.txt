@@ -2,7 +2,8 @@ Django==1.10.4
 django-crontab==0.7.1
 django-rest-swagger==2.1.0
 djangorestframework==3.5.3
-MySQL-python==1.2.5
-scrapy-djangoitem==1.1.1
-#Scrapy==1.0.3
+olefile==0.44
+Pillow==4.0.0
 pygame==1.9.2
+Scrapy==1.0.3
+scrapy-djangoitem==1.1.1

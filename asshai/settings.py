@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from dae.api.mysql import get_mysql_conn_params
+dae_db_config = get_mysql_conn_params()
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_framework_swagger',
+    # 'rest_framework_swagger',
     'topic',
     'django_crontab',
 ]
@@ -78,13 +81,23 @@ WSGI_APPLICATION = 'asshai.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'test_linwei_asshai',
+#         'USER': '',
+#         'PASSWORD': '',
+#         'PORT': '3306',
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_linwei_asshai',
-        'USER': '',
-        'PASSWORD': '',
-        'PORT': '3306',
+        'NAME': dae_db_config['db'],
+        'USER': dae_db_config['user'],
+        'PASSWORD': dae_db_config['passwd'],
+        'HOST': dae_db_config['host'],
+        'PORT': dae_db_config['port'],
     }
 }
 
